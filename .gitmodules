@@ -1,0 +1,6 @@
+[submodule "deps/Commons"]
+	path = deps/Commons
+	url = git@github.com:ofte-ch/java-commons.git
+[submodule "deps/RPCServer"]
+	path = deps/RPCServer
+	url = git@github.com:ofte-ch/RPCServer.git
