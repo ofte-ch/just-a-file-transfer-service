@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<org.jetbrains.version>26.0.2-1</org.jetbrains.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -151,6 +152,11 @@
 			<groupId>ch.ofte</groupId>
 			<artifactId>rpcserver</artifactId>
 			<version>2025.0.1-DEV</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>${org.jetbrains.version}</version>
 		</dependency>
 	</dependencies>
 
