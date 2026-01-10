@@ -1,0 +1,38 @@
+﻿.tooltip-inner {
+	max-width: 80vw;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: break-word;
+	text-align: left;
+}
+
+.money {
+	text-align: right !important;
+	font-weight: bold;
+}
+
+table.dataTable thead tr th, table.dataTable tbody tr td {
+	white-space: normal;
+	word-break: normal;
+}
+
+table.dataTable {
+	table-layout: fixed;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+	white-space: normal;
+}
+
+.markdown > table.tabulator .tabulator-row:hover .tabulator-cell, .tabulator.table .tabulator-row:hover .tabulator-cell {
+	background-color: transparent;
+}
+
+.tabulator .tabulator-footer {
+	background-color: transparent;
+}
+
+.tabulator-row .tabulator-cell {
+	white-space: normal;
+	word-break: normal;
+}
