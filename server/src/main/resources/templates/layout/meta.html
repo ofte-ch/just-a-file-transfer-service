@@ -1,24 +1,41 @@
 <th:block th:fragment="meta">
+	<!-- Basic Meta Tags -->
+	<meta charset="UTF-8">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" th:content="${pageDescription} ?: 'great app'"/>
-<!--	<meta name="keywords" th:content="${pageKeywords}"/>-->
-<!--	<meta name="author" content="Your Company"/>-->
-<!--	<meta name="canonical" content="{{ site.previewUrl }}{{ page.url | replace: 'index.html', '' }}">-->
-<!--	<meta name="twitter:image:src" content="{% if environment != 'development' %}{{ site.previewUrl }}{% endif %}/static/og.png">-->
-<!--	<meta name="twitter:site" content="@tabler_ui">-->
-<!--	<meta name="twitter:card" content="summary">-->
-<!--	<meta name="twitter:title" content="Tabler: {{ site.descriptionShort }}">-->
-<!--	<meta name="twitter:description" content="{{ site.description}}">-->
-<!--	<meta property="og:image" content="{% if environment != 'development' %}{{ site.previewUrl }}{% endif %}/static/og.png">-->
-<!--	<meta property="og:image:width" content="1280">-->
-<!--	<meta property="og:image:height" content="640">-->
-<!--	<meta property="og:site_name" content="Tabler">-->
-<!--	<meta property="og:type" content="object">-->
-<!--	<meta property="og:title" content="Tabler: {{ site.descriptionShort }}">-->
-<!--	<meta property="og:url" content="{% if environment != 'development' %}{{ site.previewUrl }}{% endif %}/static/og.png">-->
-<!--	<meta property="og:description" content="{{ site.description }}">-->
+	
+	<!-- SEO Meta Tags -->
+	<meta name="description" th:content="${pageDescription} ?: 'Just A File Transfer Service - Simple, secure, and fast file sharing service. Share files easily with a unique key.'"/>
+	<meta name="keywords" th:content="${pageKeywords} ?: 'file transfer, file sharing, secure file transfer, file upload, file download, share files'"/>
+	<meta name="author" content="Just A File Transfer Service"/>
+	<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+	
+	<!-- Canonical URL -->
+	<link rel="canonical" th:href="${canonicalUrl}" th:if="${canonicalUrl != null}"/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" th:content="${canonicalUrl}" th:if="${canonicalUrl != null}">
+	<meta property="og:title" th:content="${pageTitle} ?: 'Just A File Transfer Service'">
+	<meta property="og:description" th:content="${pageDescription} ?: 'Simple, secure, and fast file sharing service. Share files easily with a unique key.'">
+	<meta property="og:image" th:content="@{${ogImage ?: '/images/og-image.png'}}">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:site_name" content="Just A File Transfer Service">
+	<meta property="og:locale" content="en_US">
+	
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:url" th:content="${canonicalUrl}" th:if="${canonicalUrl != null}">
+	<meta name="twitter:title" th:content="${pageTitle} ?: 'Just A File Transfer Service'">
+	<meta name="twitter:description" th:content="${pageDescription} ?: 'Simple, secure, and fast file sharing service. Share files easily with a unique key.'">
+	<meta property="twitter:image" th:content="@{${ogImage ?: '/images/og-image.png'}}">
+	<meta name="twitter:site" content="@jafts">
+
+	<!-- Additional SEO Tags -->
+	<meta name="theme-color" content="#066fd1">
+	<meta name="msapplication-TileColor" content="#066fd1">
 
 </th:block>
