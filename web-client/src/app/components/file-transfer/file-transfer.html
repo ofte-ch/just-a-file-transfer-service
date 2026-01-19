@@ -1,0 +1,62 @@
+<div class="row g-4">
+    <!-- Send Card -->
+    <div class="col-md-6">
+        <article class="card">
+            <div class="card-header">
+                <h2 class="card-title h3" th:text="#{home.send.title}">Send</h2>
+            </div>
+            <div class="card-body">
+                <form id="sendForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label" th:text="#{home.send.label}">Select file to send</label>
+                        <input type="file" class="form-control" id="fileInput" name="file" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="m0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                            <path d="M7 9l5 -5 5 5"></path>
+                            <path d="M12 4l0 12"></path>
+                        </svg>
+                        <span th:text="#{home.send.button}">Send</span>
+                    </button>
+                </form>
+            </div>
+        </article>
+    </div>
+
+    <!-- Receive Card -->
+    <div class="col-md-6">
+        <article class="card">
+            <div class="card-header">
+                <h2 class="card-title h3" th:text="#{home.receive.title}">Receive</h2>
+            </div>
+            <div class="card-body">
+                <form id="receiveForm">
+                    <div class="mb-3">
+                        <label for="keyInput" class="form-label" th:text="#{home.receive.label}">Enter key to receive file</label>
+                        <input type="text" class="form-control" id="keyInput" name="key" th:placeholder="#{home.receive.placeholder}" placeholder="Enter file key" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="m0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                            <path d="M7 7l5 5 5 -5"></path>
+                            <path d="M12 4l0 12"></path>
+                        </svg>
+                        <span th:text="#{home.receive.button}">Receive</span>
+                    </button>
+                </form>
+            </div>
+        </article>
+    </div>
+</div>
+
+<!-- Status/Result Area -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div id="statusArea" class="d-none">
+            <!-- Status messages will appear here -->
+        </div>
+    </div>
+</div>
