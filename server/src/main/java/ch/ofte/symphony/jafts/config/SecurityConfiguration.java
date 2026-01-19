@@ -31,7 +31,8 @@ public class SecurityConfiguration {
                                 "/images/**",
                                 "/favicon.ico",
                                 "/webjars/**",
-                                "/api/**"
+                                "/api/**",
+                                "/test**"
                         ).permitAll()
                         .requestMatchers("/public/**", "/").permitAll()
                         .anyRequest().authenticated()

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test WebSocket</title>
+</head>
+<body>
+    <script>
+        console.log('test')
+        let conn = new WebSocket("ws://localhost:8080/test-socket-protocol");
+
+        function send(message) {
+            conn.send(JSON.stringify(message));
+        }
+
+        let configuration = null;
+        let peerConnection = new RTCPeerConnection(configuration);
+        let dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });
+
+        dataChannel.onerror = function(error) {
+            console.log("Error:", error);
+        };
+        dataChannel.onclose = function() {
+            console.log("Data channel is closed");
+        };
+    </script>
+</body>
+</html>
