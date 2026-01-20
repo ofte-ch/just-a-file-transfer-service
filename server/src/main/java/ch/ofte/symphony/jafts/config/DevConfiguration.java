@@ -22,8 +22,13 @@ public class DevConfiguration {
         final ClassPathResource applicationFile = new ClassPathResource(APPLICATION_FILE_NAME);
         if (applicationFile.isFile()) {
             File sourceRoot = applicationFile.getFile().getParentFile();
-            while (Objects.requireNonNull(sourceRoot.listFiles((dir, name) -> name.equals("mvnw"))).length != 1) {
+            while (sourceRoot != null
+                    && sourceRoot.getParentFile() != null
+                    && Objects.requireNonNull(sourceRoot.listFiles((dir, name) -> name.equals("mvnw"))).length != 1) {
                 sourceRoot = sourceRoot.getParentFile();
+            }
+            if (sourceRoot == null) {
+                return;
             }
             final FileTemplateResolver fileTemplateResolver = new FileTemplateResolver();
             fileTemplateResolver.setPrefix(sourceRoot.getPath() + "/src/main/resources/templates/");
