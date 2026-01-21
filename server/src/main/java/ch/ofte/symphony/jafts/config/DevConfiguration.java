@@ -50,11 +50,20 @@ public class DevConfiguration implements WebMvcConfigurer {
         if (this.sourceRootPath != null) {
             String staticPath = "file:" + this.sourceRootPath + "/src/main/resources/static/";
 
-            registry.addResourceHandler("/css/**", "/js/**", "/images/**", "/assets/**")
-                    .addResourceLocations(staticPath + "css/",
-                            staticPath + "js/",
-                            staticPath + "images/",
-                            staticPath + "assets/")
+            registry.addResourceHandler("/css/**")
+                    .addResourceLocations(staticPath + "css/")
+                    .setCachePeriod(0);
+
+            registry.addResourceHandler("/js/**")
+                    .addResourceLocations(staticPath + "js/")
+                    .setCachePeriod(0);
+
+            registry.addResourceHandler("/images/**")
+                    .addResourceLocations(staticPath + "images/")
+                    .setCachePeriod(0);
+
+            registry.addResourceHandler("/assets/**")
+                    .addResourceLocations(staticPath + "assets/")
                     .setCachePeriod(0);
         }
     }
