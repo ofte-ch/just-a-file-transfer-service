@@ -47,14 +47,14 @@ public class DevConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@NotNull ResourceHandlerRegistry registry) {
-        // Preserve Spring Boot's default resource handlers (e.g., /webjars/**, /error, etc.)
-        super.addResourceHandlers(registry);
-        
         if (this.sourceRootPath != null) {
             String staticPath = "file:" + this.sourceRootPath + "/src/main/resources/static/";
 
-            registry.addResourceHandler("/**")
-                    .addResourceLocations(staticPath)
+            registry.addResourceHandler("/css/**", "/js/**", "/images/**", "/assets/**")
+                    .addResourceLocations(staticPath + "css/",
+                            staticPath + "js/",
+                            staticPath + "images/",
+                            staticPath + "assets/")
                     .setCachePeriod(0);
         }
     }
