@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import java.io.IOException;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
-@Slf4j
 public class IdempotencyFilter extends OncePerRequestFilter {
 
     private final IdempotencyService idempotencyService;
@@ -41,22 +39,19 @@ public class IdempotencyFilter extends OncePerRequestFilter {
             return;
         }
 
-        log.debug("Processing request with idempotency key: {}", idempotencyKey);
 
         IdempotencyState state = idempotencyService.checkState(idempotencyKey);
 
         switch (state.getStatus()) {
             case PROCESSING:
                 // Request is already being processed
-                log.warn("Duplicate request detected with key: {}", idempotencyKey);
                 response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
                 response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"Request đang được xử lý, vui lòng đợi\"}");
+                response.getWriter().write("{\"error\":\"Request is being processed, please wait\"}");
                 return;
 
             case COMPLETED:
                 // Return cached response
-                log.info("Returning cached response for key: {}", idempotencyKey);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");
                 response.getWriter().write(state.getResponseBody());

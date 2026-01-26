@@ -2,7 +2,6 @@ package ch.ofte.symphony.jafts.idempotency;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -12,7 +11,6 @@ import java.time.Duration;
  * Prevents duplicate file uploads by tracking request states
  */
 @Service
-@Slf4j
 public class IdempotencyService {
 
     private final Cache<String, IdempotencyState> cache;
@@ -22,8 +20,6 @@ public class IdempotencyService {
                 .expireAfterWrite(Duration.ofHours(2))
                 .maximumSize(10_000)
                 .build();
-
-        log.info("IdempotencyService initialized with 2-hour TTL, max 10,000 entries");
     }
 
     /**
@@ -34,7 +30,6 @@ public class IdempotencyService {
         if (state == null) {
             return new IdempotencyState(IdempotencyState.Status.NOT_FOUND);
         }
-        log.debug("Idempotency key {} is in state: {}", key, state.getStatus());
         return state;
     }
 
@@ -43,7 +38,6 @@ public class IdempotencyService {
      */
     public void markProcessing(String key) {
         cache.put(key, new IdempotencyState(IdempotencyState.Status.PROCESSING));
-        log.debug("Marked idempotency key {} as PROCESSING", key);
     }
 
     /**
@@ -51,7 +45,6 @@ public class IdempotencyService {
      */
     public void markCompleted(String key, String responseBody) {
         cache.put(key, new IdempotencyState(IdempotencyState.Status.COMPLETED, responseBody));
-        log.debug("Marked idempotency key {} as COMPLETED", key);
     }
 
     /**
@@ -59,15 +52,5 @@ public class IdempotencyService {
      */
     public void markFailed(String key) {
         cache.invalidate(key);
-        log.debug("Removed idempotency key {} from cache (failed request)", key);
-    }
-
-    /**
-     * Get cache statistics
-     */
-    public String getStats() {
-        var stats = cache.stats();
-        return String.format("Cache stats - hitRate: %.2f%%, size: %d",
-                stats.hitRate() * 100, cache.estimatedSize());
     }
 }

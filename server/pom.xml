@@ -143,6 +143,7 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Commented out - not used and requires git submodules setup
 		<dependency>
 			<groupId>ch.ofte</groupId>
 			<artifactId>commons</artifactId>
@@ -153,6 +154,7 @@
 			<artifactId>rpcserver</artifactId>
 			<version>2025.0.1-DEV</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>

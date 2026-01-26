@@ -1,11 +1,16 @@
 package ch.ofte.symphony.jafts.p2p_transfer;
 
+import ch.ofte.symphony.jafts.idempotency.IdempotencyKeyGenerator;
 import ch.ofte.symphony.jafts.idempotency.IdempotencyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -19,70 +24,75 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/p2p")
 @RequiredArgsConstructor
-@Slf4j
 public class P2PTransferController {
 
+    // Constants for response keys
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_STATUS = "status";
+    private static final String STATUS_SUCCESS = "success";
+    private static final String STATUS_ERROR = "error";
+    private static final String KEY_FILE_ID = "fileId";
+    private static final String KEY_FILE_NAME = "fileName";
+    private static final String KEY_FILE_SIZE = "fileSize";
+    private static final String KEY_CONTENT_TYPE = "contentType";
+    private static final String KEY_NEW_IDEMPOTENCY = "newIdempotencyKey";
+
     private final IdempotencyService idempotencyService;
+    private final IdempotencyKeyGenerator idempotencyKeyGenerator;
     private final ObjectMapper objectMapper;
 
     /**
      * Upload file with idempotency key protection
-     * Client must send X-Idempotency-Key header
+     * Key must match the one generated in session (like CSRF token)
      */
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestHeader(value = "X-Idempotency-Key", required = false) String idempotencyKey) {
+            @RequestHeader(value = "X-Idempotency-Key", required = false) String idempotencyKey,
+            HttpSession session) {
 
-        log.info("Upload request received - file: {}, size: {} bytes, idempotency: {}",
-                file.getOriginalFilename(), file.getSize(), idempotencyKey);
+        // Validate idempotency key from session (like CSRF validation)
+        if (idempotencyKey == null || !idempotencyKeyGenerator.isValid(idempotencyKey, session)) {
+            return buildErrorResponse("Invalid or missing idempotency key", ResponseEntity.badRequest());
+        }
 
         try {
-            // Process file upload (mock implementation)
+            // Process file upload
             String fileId = UUID.randomUUID().toString();
 
-            // TODO: Implement actual file saving logic
-            // String savedPath = fileService.saveFile(file);
-
             Map<String, Object> response = new HashMap<>();
-            response.put("fileId", fileId);
-            response.put("fileName", file.getOriginalFilename());
-            response.put("fileSize", file.getSize());
-            response.put("contentType", file.getContentType());
-            response.put("status", "success");
+            response.put(KEY_FILE_ID, fileId);
+            response.put(KEY_FILE_NAME, file.getOriginalFilename());
+            response.put(KEY_FILE_SIZE, file.getSize());
+            response.put(KEY_CONTENT_TYPE, file.getContentType());
+            response.put(KEY_STATUS, STATUS_SUCCESS);
 
-            // Mark as completed in cache if idempotency key provided
-            if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-                String responseBody = objectMapper.writeValueAsString(response);
-                idempotencyService.markCompleted(idempotencyKey, responseBody);
-            }
+            // Mark as completed in cache
+            String responseBody = objectMapper.writeValueAsString(response);
+            idempotencyService.markCompleted(idempotencyKey, responseBody);
 
-            log.info("File uploaded successfully - fileId: {}", fileId);
+            // Refresh idempotency key for next upload (like CSRF token refresh)
+            String newKey = idempotencyKeyGenerator.refreshKey(session);
+            response.put(KEY_NEW_IDEMPOTENCY, newKey);
+
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("Upload failed", e);
-
             // Mark as failed (allow retry)
-            if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-                idempotencyService.markFailed(idempotencyKey);
-            }
-
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Upload thất bại: " + e.getMessage());
-            errorResponse.put("status", "error");
-
-            return ResponseEntity.internalServerError().body(errorResponse);
+            idempotencyService.markFailed(idempotencyKey);
+            return buildErrorResponse("Upload failed: " + e.getMessage(), ResponseEntity.internalServerError());
         }
     }
 
     /**
-     * Get idempotency cache statistics
+     * Build error response with consistent structure
      */
-    @GetMapping("/idempotency/stats")
-    public ResponseEntity<Map<String, String>> getIdempotencyStats() {
-        Map<String, String> stats = new HashMap<>();
-        stats.put("cacheStats", idempotencyService.getStats());
-        return ResponseEntity.ok(stats);
+    private ResponseEntity<Map<String, Object>> buildErrorResponse(
+            String errorMessage,
+            ResponseEntity.BodyBuilder responseBuilder) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put(KEY_ERROR, errorMessage);
+        errorResponse.put(KEY_STATUS, STATUS_ERROR);
+        return responseBuilder.body(errorResponse);
     }
 }
