@@ -30,5 +30,13 @@ replay_pid*
 *.ipr
 
 ### VSCode ###
-.vscode/settings.json
+.vscode/
+
+### Test Files ###
+*.bin
+*test*.bin
+large-test.*
+
+### Upload Directory ###
+uploads/
 
