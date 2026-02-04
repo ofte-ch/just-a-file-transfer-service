@@ -28,3 +28,15 @@ replay_pid*
 *.iws
 *.iml
 *.ipr
+
+### VSCode ###
+.vscode/
+
+### Test Files ###
+*.bin
+*test*.bin
+large-test.*
+
+### Upload Directory ###
+uploads/
+
