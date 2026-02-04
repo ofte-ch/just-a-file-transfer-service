@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="great app"/>
     <!-- Dynamic title with default -->
-    <title>Just A File Transfer Service</title>
+    <title th:text="${pageTitle} ?: #{home.title}">Just A File Transfer Service - Simple & Secure File Sharing</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
@@ -28,6 +28,24 @@
     </style>
     <!-- END CUSTOM FONT -->
 
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Just A File Transfer Service",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "VND"
+        },
+        "description": "Simple, secure, and fast file sharing service. Share files easily with a unique key.",
+        "featureList": ["File Upload", "File Download", "Secure Transfer", "Key-based Access"],
+        "operatingSystem": "Any"
+    }
+    </script>
+
 </head>
 
 <body th:classappend="${bodyClass}"	data-bs-theme-primary="indigo">
@@ -39,21 +57,29 @@
     <div class="page-wrapper">
         <div>
         </div>
+<!--        <th:block th:replace="~{layout/page-header :: page-header}"></th:block>-->
 
         <!-- BEGIN PAGE BODY -->
         <div class="page-body">
             <div class="container-xl">
-                <div class="row g-4">
-                    <!-- Send Card -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Send</h3>
-                            </div>
+                <!-- Add H1 for SEO -->
+                <header class="text-center mb-4 pt-4">
+                    <h1 class="display-5 fw-bold" th:text="#{home.heading}">Just A File Transfer Service</h1>
+                    <p class="lead text-muted" th:text="#{home.description}">Simple, secure, and fast file sharing. Share files easily with a unique key.</p>
+                </header>
+
+                <main role="main">
+                    <div class="row g-4">
+                        <!-- Send Card -->
+                        <div class="col-md-6">
+                            <article class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title h3" th:text="#{home.send.title}">Send</h2>
+                                </div>
                             <div class="card-body">
                                 <form id="sendForm" enctype="multipart/form-data">
                                     <div class="mb-3">
-                                        <label for="fileInput" class="form-label">Select file to send</label>
+                                        <label for="fileInput" class="form-label" th:text="#{home.send.label}">Select file to send</label>
                                         <input type="file" class="form-control" id="fileInput" name="file" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
@@ -63,24 +89,24 @@
                                             <path d="M7 9l5 -5 5 5"></path>
                                             <path d="M12 4l0 12"></path>
                                         </svg>
-                                        Send
+                                        <span th:text="#{home.send.button}">Send</span>
                                     </button>
                                 </form>
                             </div>
-                        </div>
+                        </article>
                     </div>
 
                     <!-- Receive Card -->
                     <div class="col-md-6">
-                        <div class="card">
+                        <article class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Receive</h3>
+                                <h2 class="card-title h3" th:text="#{home.receive.title}">Receive</h2>
                             </div>
                             <div class="card-body">
                                 <form id="receiveForm">
                                     <div class="mb-3">
-                                        <label for="keyInput" class="form-label">Enter key to receive file</label>
-                                        <input type="text" class="form-control" id="keyInput" name="key" placeholder="Enter file key" required>
+                                        <label for="keyInput" class="form-label" th:text="#{home.receive.label}">Enter key to receive file</label>
+                                        <input type="text" class="form-control" id="keyInput" name="key" th:placeholder="#{home.receive.placeholder}" placeholder="Enter file key" required>
                                     </div>
                                     <button type="submit" class="btn btn-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -89,11 +115,11 @@
                                             <path d="M7 7l5 5 5 -5"></path>
                                             <path d="M12 4l0 12"></path>
                                         </svg>
-                                        Receive
+                                        <span th:text="#{home.receive.button}">Receive</span>
                                     </button>
                                 </form>
                             </div>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
@@ -106,6 +132,7 @@
                     </div>
                 </div>
 
+            </main>
             </div>
         </div>
         <!-- END PAGE BODY -->
