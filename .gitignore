@@ -40,3 +40,7 @@ large-test.*
 ### Upload Directory ###
 uploads/
 
+# Large test files
+large-test.bin
+test-key.txt
+*.bin
